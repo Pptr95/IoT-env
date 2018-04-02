@@ -34,6 +34,7 @@ class AuthTask: public Task {
     TempSensor* temp;
     Sonar* proxSensor;
     enum {IDLE, INCOMING, LOGIN, DETECTING, WORKING} state;
+    void boot();
     
   public:
     AuthTask(int servoPin, int trigPin, int echoPin, int ledOnPin, int ledValuePin, int btnExitPin, int tempPin, int rxdPin, int txdPin, int pirPin);

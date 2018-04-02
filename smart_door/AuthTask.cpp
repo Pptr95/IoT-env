@@ -35,19 +35,17 @@ void AuthTask::init(int period) {
   boot();
 }
 
-void RadarTask::boot() {
+void AuthTask::boot() {
   servoPos = INIT_POS;
-  servoScanner.write(servoPos);
+  servoDoor.write(servoPos);
   ledOn->switchOn();
-  
   state = IDLE;
 }
 
 void RadarTask::tick() {
   distance = proxSensor->getDistance();
-  if(state != IDLE && distance > MIN_DIST) {
-    servoDoor.write(INIT_POS);
-    state = IDLE;
+  if(state != IDLE && state != WORKING && distance > MIN_DIST) {
+    boot();
   }
   switch(state) {
     case IDLE:
@@ -57,7 +55,7 @@ void RadarTask::tick() {
       }
       break;
     case INCOMING:
-      if((millis() - startTime) > MIN_SEC){
+      if((millis() - startTime) >= MIN_SEC){
         state = LOGIN;
         //send hello to bt
       }
@@ -67,9 +65,9 @@ void RadarTask::tick() {
       break;
     case WAITGW:
       //wait response from gw
-      if(result == 'O') {
+      if(result == 'O') { //OK, result is the gw response
         servoDoor.write(180);
-      } else if(result == 'F') {
+      } else if(result == 'F') { // FAIL
         //send failed login to bt
         state = IDLE;
       }
