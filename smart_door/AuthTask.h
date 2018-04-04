@@ -15,29 +15,17 @@
 class AuthTask: public Task {
 
   private:
-    int servoPin;
     int trigPin;
     int echoPin;
     int ledOnPin;
-    int ledValuePin;
-    int btnExitPin;
-    int tempPin;
     int rxdPin;
     int txdPin;
-    int pirPin;
-    int servoPos;
-    Servo servoDoor;
     Light* ledOn;
-    LightExt* ledValue;
-    ButtonImpl* btnExit;
-    PirImpl* pir;
-    TempSensor* temp;
     Sonar* proxSensor;
-    enum {IDLE, INCOMING, LOGIN, DETECTING, WORKING} state;
-    void boot();
+    enum {IDLE, INCOMING, LOGIN, WAITGW, LOGGED} state;
     
   public:
-    AuthTask(int servoPin, int trigPin, int echoPin, int ledOnPin, int ledValuePin, int btnExitPin, int tempPin, int rxdPin, int txdPin, int pirPin);
+    AuthTask(int trigPin, int echoPin, int ledOnPin, int rxdPin, int txdPin);
     void init(int period);
     void tick();
 };

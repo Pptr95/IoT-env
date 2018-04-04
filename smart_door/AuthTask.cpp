@@ -1,51 +1,30 @@
-#include <Servo.h>
 #include "Arduino.h"
 #include "AuthTask.h"
-#define INIT_POS 0
 #define MIN_DIST 0.5
 #define MIN_SEC 5000
 
 float distance;
 unsigned long int startTime;
 
-AuthTask::AuthTask(int servoPin, int trigPin, int echoPin, int ledOnPin, int ledValuePin, int btnExitPin, int tempPin, int rxdPin, int txdPin, int pirPin) {
-  this->servoPin = servoPin;
+AuthTask::AuthTask(int trigPin, int echoPin, int ledOnPin, int rxdPin, int txdPin) {
   this->trigPin = trigPin;
   this->echoPin = echoPin;
   this->ledOnPin = ledOnPin;
-  this->ledValuePin = ledValuePin;
-  this->btnExitPin = btnExitPin;
-  this->tempPin = tempPin;
   this->rxdPin = rxdPin;
   this->txdPin = txdPin;
-  this->pirPin = pirPin;
-  this->pir->init();
 }
 
 void AuthTask::init(int period) {
   Task::init(period);
   Serial.begin(9600);
-  servoDoor.attach(servoPin);
   proxSensor = new Sonar(echoPin, trigPin);
   ledOn = new Led(ledOnPin);
-  ledValue = new LedExt(ledValuePin, 0);
-  btnExit = new ButtonImpl(btnExitPin);
-  pir = new PirImpl(pirPin);
-  temp = new TempSensor(tempPin);
-  boot();
 }
 
-void AuthTask::boot() {
-  servoPos = INIT_POS;
-  servoDoor.write(servoPos);
-  ledOn->switchOn();
-  state = IDLE;
-}
-
-void RadarTask::tick() {
+void AuthTask::tick() {
   distance = proxSensor->getDistance();
   if(state != IDLE && state != WORKING && distance > MIN_DIST) {
-    boot();
+    //TODO
   }
   switch(state) {
     case IDLE:

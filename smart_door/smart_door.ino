@@ -3,7 +3,7 @@
 
 #define OMEGA 100
 
-AuthTask *authTask = new AuthTask(9, 7, 4, 6, 8, 4, 0, 2, 10, 12);   //servo, trig, echo, ledOn, ledValue, btnExit, temp, rxd, txd, pir
+AuthTask *authTask = new AuthTask(9, 7, 4, 6, 8, 4, 0, 2, 10, 12);   //servo, trig, echo, ledOn, ledValue, btnExit, temp, rxd(bt), txd(bt), pir
 
 void runTask() {
   authTask->tick();
