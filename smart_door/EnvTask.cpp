@@ -2,11 +2,10 @@
 #include "Arduino.h"
 #include "EnvTask.h"
 #define INIT_POS 0
-#define MIN_DIST 0.5
 #define MIN_SEC 5000
 
-float distance;
 unsigned long int startTime;
+extern bool auth;
 
 EnvTask::AuthTask(int servoPin, int ledValuePin, int btnExitPin, int tempPin, int pirPin){
   this->servoPin = servoPin;

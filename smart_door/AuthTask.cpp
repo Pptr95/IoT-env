@@ -5,6 +5,7 @@
 
 float distance;
 unsigned long int startTime;
+extern bool auth;
 
 AuthTask::AuthTask(int trigPin, int echoPin, int ledOnPin, int rxdPin, int txdPin) {
   this->trigPin = trigPin;
