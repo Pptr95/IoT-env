@@ -1,16 +1,11 @@
 #ifndef __AUTHTASK__
 #define __AUTHTASK__
 
-#include <Servo.h>
 #include "Task.h"
 #include "MsgService.h"
 #include "Led.h"
-#include "LedExt.h"
-#include "ButtonImpl.h"
-#include "TempSensor.h"
 #include "SoftwareSerial.h"
 #include "Sonar.h"
-#include "PirImpl.h"
 
 class AuthTask: public Task {
 
