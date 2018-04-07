@@ -2,9 +2,7 @@
 #define __AUTHTASK__
 
 #include "Task.h"
-#include "MsgService.h"
 #include "Led.h"
-#include "SoftwareSerial.h"
 #include "Sonar.h"
 
 class AuthTask: public Task {
@@ -13,14 +11,14 @@ class AuthTask: public Task {
     int trigPin;
     int echoPin;
     int ledOnPin;
-    int rxdPin;
-    int txdPin;
     Light* ledOn;
     Sonar* proxSensor;
+    unsigned long int startTime;
+    float distance;
     enum {IDLE, INCOMING, LOGIN, WAITGW, LOGGED} state;
     
   public:
-    AuthTask(int trigPin, int echoPin, int ledOnPin, int rxdPin, int txdPin);
+    AuthTask(int trigPin, int echoPin, int ledOnPin);
     void init(int period);
     void tick();
 };

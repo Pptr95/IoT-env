@@ -1,14 +1,16 @@
 #include <Servo.h>
 #include "Arduino.h"
 #include "EnvTask.h"
+#include "MsgService.h"
+#include "SoftwareSerial.h"
 #define CLOSE_POS 0
 #define OPEN_POS 180
 #define MAX_DELAY 5000
 
-unsigned long int startTime;
 extern bool auth;
+extern MsgService msgService;
 
-EnvTask::AuthTask(int servoPin, int ledValuePin, int btnExitPin, int tempPin, int pirPin){
+EnvTask::EnvTask(int servoPin, int ledValuePin, int btnExitPin, int tempPin, int pirPin) {
   this->servoPin = servoPin;
   this->ledValuePin = ledValuePin;
   this->btnExitPin = btnExitPin;
@@ -21,9 +23,7 @@ void EnvTask::init(int period) {
   Task::init(period);
   Serial.begin(9600);
   servoDoor.attach(servoPin);
-  servoScanner.write(CLOSE_POS);
-  proxSensor = new Sonar(echoPin, trigPin);
-  ledOn = new Led(ledOnPin);
+  servoDoor.write(CLOSE_POS);
   ledValue = new LedExt(ledValuePin, 0);
   btnExit = new ButtonImpl(btnExitPin);
   pir = new PirImpl(pirPin);
@@ -44,7 +44,7 @@ void EnvTask::tick() {
       if((millis() - startTime) >= MAX_DELAY) {
         //invio F al bt
         Serial.println("F");
-        servoScanner.write(OPEN_POS);
+        servoDoor.write(OPEN_POS);
         auth = false;
         state = IDLE;
       } else if((millis() - startTime) < MAX_DELAY && pir->isDetected()) {
@@ -53,14 +53,28 @@ void EnvTask::tick() {
       }
       break;
     case WORKING:
-      if(Serial.available()) {    //read value from bt
-        int brightness = Serial.read();
-        ledValue->setIntensity(brightness);
+      String msg;
+      if(msgService.isMsgAvailable()) {
+        Msg* message = msgService.receiveMsg();
+        msg = message->getContent();
+      }
+      if(msg != "L") {
+        ledValue->setIntensity(msg.toInt());
       }
       float temperature = temp->readTemperature();
-      
-      Serial.println();
-      Serial.println("F");
+      int ledIntensity = ledValue->getIntensity();
+      Serial.print("[");
+      Serial.print(temperature);
+      Serial.print(" ");
+      Serial.print(ledIntensity);
+      Serial.println("]");
+      msgService.sendMsg(Msg(String(temperature)));
+      if(msg == "L" || btnExit->isPressed()) {
+        msgService.sendMsg(Msg("L"));
+        servoDoor.write(CLOSE_POS);
+        auth = false;
+        state = IDLE;
+      }
       break;
   }
 }

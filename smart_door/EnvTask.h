@@ -3,11 +3,9 @@
 
 #include <Servo.h>
 #include "Task.h"
-#include "MsgService.h"
 #include "LedExt.h"
 #include "ButtonImpl.h"
 #include "TempSensor.h"
-#include "SoftwareSerial.h"
 #include "PirImpl.h"
 
 class EnvTask: public Task {
@@ -24,10 +22,11 @@ class EnvTask: public Task {
     ButtonImpl* btnExit;
     PirImpl* pir;
     TempSensor* temp;
+    unsigned long int startTime;
     enum {IDLE, DETECTING, WORKING} state;
     
   public:
-    AuthTask(int servoPin, int ledValuePin, int btnExitPin, int tempPin, int pirPin);
+    EnvTask(int servoPin, int ledValuePin, int btnExitPin, int tempPin, int pirPin);
     void init(int period);
     void tick();
 };

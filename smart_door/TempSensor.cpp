@@ -1,6 +1,7 @@
 #include "TempSensor.h"
+#include "Arduino.h"
 
-TempSensor::TempSensor() {
+TempSensor::TempSensor(int pin) {
   this->pin = pin;
   pinMode(pin, INPUT);     
 } 

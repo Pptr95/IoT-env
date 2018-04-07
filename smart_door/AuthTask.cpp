@@ -1,18 +1,17 @@
 #include "Arduino.h"
 #include "AuthTask.h"
+#include "MsgService.h"
+#include "SoftwareSerial.h"
 #define MIN_DIST 0.5
 #define MIN_SEC 5000
 
-float distance;
-unsigned long int startTime;
 extern bool auth;
+extern MsgService msgService;
 
-AuthTask::AuthTask(int trigPin, int echoPin, int ledOnPin, int rxdPin, int txdPin) {
+AuthTask::AuthTask(int trigPin, int echoPin, int ledOnPin) {
   this->trigPin = trigPin;
   this->echoPin = echoPin;
   this->ledOnPin = ledOnPin;
-  this->rxdPin = rxdPin;
-  this->txdPin = txdPin;
 }
 
 void AuthTask::init(int period) {
@@ -37,23 +36,24 @@ void AuthTask::tick() {
         state = IDLE;
       } else if((millis() - startTime) >= MIN_SEC){
         state = LOGIN;
-        Serial.println("H");    //bt
+        msgService.sendMsg(Msg("H"));
       }
       break;
     case LOGIN:
       if(distance > MIN_DIST) {
         state = IDLE;
-        Serial.println("F");    //bt
-      } else if(Serial.available()) {   //from bt
-        //char data = Serial.read();
-        //Serial.println(data);
+        msgService.sendMsg(Msg("F"));
+      } else if(msgService.isMsgAvailable()) {
+        Msg* message = msgService.receiveMsg();
+        String msg = message->getContent();
+        Serial.println(msg);
         state = WAITGW;
       }
       break;
     case WAITGW:
       if(distance > MIN_DIST) {
         state = IDLE;
-        Serial.println("F");    //bt
+        msgService.sendMsg(Msg("F"));
       } else if(Serial.available()) {
         char data = Serial.read();
         if(data == "O") {
@@ -61,7 +61,7 @@ void AuthTask::tick() {
           state = LOGGED;
         } else if(data == "K") {
           state = IDLE;
-          Serial.println("F");  //bt
+          msgService.sendMsg(Msg("F"));
         }
       }
       break;
