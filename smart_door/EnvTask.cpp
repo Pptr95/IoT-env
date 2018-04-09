@@ -16,7 +16,6 @@ EnvTask::EnvTask(int servoPin, int ledValuePin, int btnExitPin, int tempPin, int
   this->btnExitPin = btnExitPin;
   this->tempPin = tempPin;
   this->pirPin = pirPin;
-  this->pir->init();
 }
 
 void EnvTask::init(int period) {
@@ -27,8 +26,10 @@ void EnvTask::init(int period) {
   ledValue = new LedExt(ledValuePin, 0);
   btnExit = new ButtonImpl(btnExitPin);
   pir = new PirImpl(pirPin);
+  pir->init();
   temp = new TempSensor(tempPin);
   state = IDLE;
+  Serial.println("in init envtask");
 }
 
 void EnvTask::tick() {

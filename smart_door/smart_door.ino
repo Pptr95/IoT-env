@@ -18,7 +18,9 @@ void runTask() {
 }
 
 void setup() {
+  Serial.begin(9600);
   authTask->init(OMEGA);
+  envTask->init(OMEGA);
   FlexiTimer2::set(OMEGA, runTask);
   FlexiTimer2::start();
 }
