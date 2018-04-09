@@ -35,7 +35,7 @@ void EnvTask::init(int period) {
 void EnvTask::tick() {
   switch(state) {
     case IDLE:
-      if(auth) {
+      if(auth) {      
         state = DETECTING;
         servoDoor.write(OPEN_POS);
         startTime = millis();
@@ -43,9 +43,9 @@ void EnvTask::tick() {
      break;
     case DETECTING:
       if((millis() - startTime) >= MAX_DELAY) {
-        //invio F al bt
-        Serial.println("F");
-        servoDoor.write(OPEN_POS);
+        msgService.sendMsg(Msg("F")); //send fail to bt
+        Serial.println("F"); // send fail to GW
+        servoDoor.write(CLOSE_POS);
         auth = false;
         state = IDLE;
       } else if((millis() - startTime) < MAX_DELAY && pir->isDetected()) {

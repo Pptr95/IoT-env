@@ -17,7 +17,6 @@ AuthTask::AuthTask(int trigPin, int echoPin, int ledOnPin) {
 void AuthTask::init(int period) {
   Task::init(period);
   Serial.begin(9600);
-  Serial.println("in authtask init");
   proxSensor = new Sonar(echoPin, trigPin);
   ledOn = new Led(ledOnPin);
   ledOn->switchOn();
@@ -26,7 +25,7 @@ void AuthTask::init(int period) {
 
 void AuthTask::tick() {
   distance = proxSensor->getDistance();
-  Serial.println("debug");
+  Serial.println(distance); //always 0.00
   switch(state) {
     case IDLE:
       if(distance <= MIN_DIST) {
