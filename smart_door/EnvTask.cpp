@@ -3,7 +3,7 @@
 #include "EnvTask.h"
 #include "MsgService.h"
 #include "SoftwareSerial.h"
-#define CLOSE_POS 0
+#define CLOSE_POS 20
 #define OPEN_POS 180
 #define MAX_DELAY 5000
 
@@ -29,7 +29,6 @@ void EnvTask::init(int period) {
   pir->init();
   temp = new TempSensor(tempPin);
   state = IDLE;
-  Serial.println("in init envtask");
 }
 
 void EnvTask::tick() {

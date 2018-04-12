@@ -1,7 +1,6 @@
 #include "Arduino.h"
 #include "AuthTask.h"
 #include "MsgService.h"
-#include "SoftwareSerial.h"
 #define MIN_DIST 0.5
 #define MIN_SEC 5000
 
@@ -25,7 +24,6 @@ void AuthTask::init(int period) {
 
 void AuthTask::tick() {
   distance = proxSensor->getDistance();
-  Serial.println(distance); //always 0.00
   switch(state) {
     case IDLE:
       if(distance <= MIN_DIST) {
@@ -38,7 +36,7 @@ void AuthTask::tick() {
         state = IDLE;
       } else if((millis() - startTime) >= MIN_SEC){
         state = LOGIN;
-        msgService.sendMsg(Msg("H"));
+        msgService.sendMsg(Msg("H"));  
       }
       break;
     case LOGIN:
