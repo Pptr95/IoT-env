@@ -28,6 +28,7 @@ class EnvTask: public Task {
   public:
     EnvTask(int servoPin, int ledValuePin, int btnExitPin, int tempPin, int pirPin);
     void init(int period);
+    void logout();
     void tick();
 };
 

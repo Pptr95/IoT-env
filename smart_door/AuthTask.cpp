@@ -56,7 +56,7 @@ void AuthTask::tick() {
         msgService.sendMsg(Msg("F"));
       } else if(Serial.available()) {
         char data = Serial.read();
-        if(data == "O") {
+        if(data == 'O') {
           auth = true;
           state = LOGGED;
         } else if(data == "K") {
@@ -66,6 +66,7 @@ void AuthTask::tick() {
       }
       break;
     case LOGGED:
+    Serial.println("logged");
       if(!auth) {
         state = IDLE;
       }
