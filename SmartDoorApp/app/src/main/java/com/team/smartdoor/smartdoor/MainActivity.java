@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     final int REQUEST_ENABLE_BT = 1;
     private Set<BluetoothDevice> pairedDevices;
     private ListView listPairedDevices;
-    private ArrayList<BluetoothDevice> nbDevices;
+    private ArrayList<String> nbDevices;
     private ListView listDiscoveredDevices;
 
 
@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     public void onStart(){
         super.onStart();
         getPairedDevices();
+        nbDevices.clear();
         btAdapter.startDiscovery();
 
 
@@ -85,13 +86,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private final BroadcastReceiver br = new BroadcastReceiver(){
-        @Override
+       @Override
         public void onReceive(Context context , Intent intent){
             BluetoothDevice device = null;
             if(BluetoothDevice.ACTION_FOUND.equals(intent.getAction())){
                 device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                nbDevices.add(device);
-                final ArrayAdapter adapter = new  ArrayAdapter(this, android.R.layout.simple_list_item_1, nbDevices);
+                nbDevices.add(device.getName());
+                final ArrayAdapter adapter = new  ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, nbDevices);
                 listDiscoveredDevices.setAdapter(adapter);
             }
         }
