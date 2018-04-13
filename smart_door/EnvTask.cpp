@@ -6,6 +6,7 @@
 #define CLOSE_POS 20
 #define OPEN_POS 160
 #define MAX_DELAY 5000
+#define SEND_DELAY 5000
 
 extern bool auth;
 extern MsgService msgService;
@@ -24,7 +25,6 @@ void EnvTask::init(int period) {
   servoDoor.attach(servoPin);
   servoDoor.write(CLOSE_POS);
   ledValue = new LedExt(ledValuePin, 0);
-  ledValue->switchOn();
   btnExit = new ButtonImpl(btnExitPin);
   pir = new PirImpl(pirPin);
   pir->init();
@@ -35,6 +35,7 @@ void EnvTask::init(int period) {
 void EnvTask::logout() {
     msgService.sendMsg(Msg("L"));
     servoDoor.write(CLOSE_POS);
+    ledValue->switchOff();
     auth = false;
     state = IDLE;
 }
@@ -57,6 +58,7 @@ void EnvTask::tick() {
         state = IDLE;
       } else if(((millis() - startTime) < MAX_DELAY) && pir->isDetected()) {
         Serial.println("Y");
+        ledValue->switchOn();
         state = WORKING;
       }
       break;
@@ -66,20 +68,23 @@ void EnvTask::tick() {
         Msg* message = msgService.receiveMsg();
         msg = message->getContent();
         if(msg != "L") {
-          int intens = msg.toInt();
-          ledValue->setIntensity(intens);
+          int intensity = msg.toInt();
+          ledValue->setIntensity(intensity);
         } else { //else means that msg is "L"
           logout();
         }
        }
       float temperature = temp->readTemperature();
       int ledIntensity = ledValue->getIntensity();
-      Serial.print("[");
-      Serial.print(temperature);
-      Serial.print(" ");
-      Serial.print(ledIntensity);
-      Serial.println("]");
-      msgService.sendMsg(Msg(String(temperature)));
+      if((millis() - startTime) >= SEND_DELAY) {
+        Serial.print("[");
+        Serial.print(temperature);
+        Serial.print(" ");
+        Serial.print(ledIntensity);
+        Serial.println("]");
+        msgService.sendMsg(Msg(String(temperature)));
+        startTime = millis();
+      }
       if(btnExit->isPressed()) {
         logout();
       }

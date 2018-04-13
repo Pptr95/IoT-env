@@ -59,14 +59,13 @@ void AuthTask::tick() {
         if(data == 'O') {
           auth = true;
           state = LOGGED;
-        } else if(data == "K") {
+        } else if(data == 'K') {
           state = IDLE;
           msgService.sendMsg(Msg("F"));
         }
       }
       break;
     case LOGGED:
-    Serial.println("logged");
       if(!auth) {
         state = IDLE;
       }

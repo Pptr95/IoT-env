@@ -4,8 +4,8 @@
 #include "MsgService.h"
 #define OMEGA 100
 
-AuthTask *authTask = new AuthTask(7, 4, 6);   //trig, echo, ledOn
-EnvTask *envTask = new EnvTask(9, 11, 5, 0, 12);   //servo, ledValue, btnExit, temp, pir
+AuthTask *authTask = new AuthTask(7, 4, 8);   //trig, echo, ledOn
+EnvTask *envTask = new EnvTask(9, 6, 5, 0, 12);   //servo, ledValue, btnExit, temp, pir
 bool auth;
 MsgService msgService(2, 10);   //txd(bt), rxd(bt)
 
