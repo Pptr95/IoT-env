@@ -1,11 +1,7 @@
 package com.team.smartdoor.smartdoor;
 
 import android.bluetooth.BluetoothSocket;
-import android.content.Intent;
 import android.os.Handler;
-import android.os.Message;
-import android.widget.Toast;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -18,7 +14,6 @@ public class SendReceive extends Thread {
     private Handler handler;
     private boolean stop;
     private static SendReceive instance = null;
-
     private SendReceive(){
         stop = true;
     }
@@ -55,7 +50,8 @@ public class SendReceive extends Thread {
         while (!stop){
             try{
                 bytes = inputStream.read(buffer);
-                handler.obtainMessage(-1,bytes,-1,buffer).sendToTarget();
+                String message = new String(buffer,0,bytes);
+                handler.obtainMessage(-1,bytes,-1,message).sendToTarget();
             } catch (IOException ex){
                 stop = true;
             }
@@ -77,5 +73,4 @@ public class SendReceive extends Thread {
             stop = true;
         }
     }
-
 }

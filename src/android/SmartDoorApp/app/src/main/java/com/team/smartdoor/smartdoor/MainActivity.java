@@ -1,18 +1,17 @@
 package com.team.smartdoor.smartdoor;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.AsyncTaskLoader;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
-import android.os.Handler;
-
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -21,12 +20,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Set;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
@@ -42,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
     Button scanButton;
     UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+    DialogFragment loadingFragment = new LoadingFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
         listViewPairedDevices = (ListView)findViewById(R.id.listPairedDevices);
         listViewDiscoveredDevices = (ListView)findViewById(R.id.listDiscoveredDevices);
         scanButton = (Button)findViewById(R.id.scan_devices);
-
         discoveredDevices = new ArrayList<>();
         discoveredNames = new ArrayList<>();
         IntentFilter intentFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
@@ -71,13 +66,18 @@ public class MainActivity extends AppCompatActivity {
         listViewDiscoveredDevices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                btAdapter.cancelDiscovery();
+                loadingFragment.show( getFragmentManager() , "loading");
                 new ClientClass(discoveredDevices.get(i)).execute();
+
             }
         });
 
         listViewPairedDevices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                btAdapter.cancelDiscovery();
+                loadingFragment.show( getFragmentManager() , "loading");
                 new ClientClass(pairedDevices.get(i)).execute();
             }
         });
@@ -92,8 +92,6 @@ public class MainActivity extends AppCompatActivity {
         discoveredAdapter.notifyDataSetChanged();
     }
 
-
-
     @Override
     public void onStop(){
         super.onStop();
@@ -105,8 +103,6 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         SendReceive.getInstance().cancel();
     }
-
-
 
     @Override
     public void onActivityResult(int reqID, int res, Intent data){
@@ -163,7 +159,6 @@ public class MainActivity extends AppCompatActivity {
 
     private class ClientClass extends AsyncTask<Void,Void,Void>{
         private BluetoothSocket socket;
-
         public ClientClass(BluetoothDevice device){
             try {
                 socket = device.createRfcommSocketToServiceRecord(MY_UUID);
@@ -182,20 +177,36 @@ public class MainActivity extends AppCompatActivity {
             catch (IOException ex){
                 ex.printStackTrace();
             }
-            SendReceive sr = SendReceive.getInstance();
-            sr.setChannel(socket);
-            sr.start();
             return null;
         }
 
         @Override
         protected void onPostExecute(Void par){
-            Intent myIntent = new Intent(getApplicationContext(), WelcomeActivity.class);
-            startActivity(myIntent);
+            if(socket.isConnected()) {
+                SendReceive sr = SendReceive.getInstance();
+                sr.setChannel(socket);
+                sr.start();
+                Intent myIntent = new Intent(getApplicationContext(), WelcomeActivity.class);
+                startActivity(myIntent);
+            }
+            loadingFragment.dismissAllowingStateLoss();
         }
     }
 
 
+    public static class LoadingFragment extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            final ProgressDialog dialog = new ProgressDialog(getActivity());
+            dialog.setMessage(getString(R.string.loading));
+            dialog.setIndeterminate(true);
+            return dialog;
+        }
+    }
 
+    @Override
+    public void onBackPressed() {
+        return;
+    }
 }
 

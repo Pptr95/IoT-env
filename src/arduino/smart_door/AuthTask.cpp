@@ -1,8 +1,8 @@
 #include "Arduino.h"
 #include "AuthTask.h"
 #include "MsgService.h"
-#define MIN_DIST 0.5
-#define MIN_SEC 5000
+#define MIN_DIST 0.2
+#define MIN_SEC 3000
 
 extern bool auth;
 extern MsgService msgService;
@@ -42,7 +42,7 @@ void AuthTask::tick() {
     case LOGIN:
       if(distance > MIN_DIST) {
         state = IDLE;
-        msgService.sendMsg(Msg("F"));
+        msgService.sendMsg(Msg("A"));
       } else if(msgService.isMsgAvailable()) {
         Msg* message = msgService.receiveMsg();
         String msg = message->getContent();
@@ -53,15 +53,15 @@ void AuthTask::tick() {
     case WAITGW:
       if(distance > MIN_DIST) {
         state = IDLE;
-        msgService.sendMsg(Msg("F"));
+        msgService.sendMsg(Msg("A"));
       } else if(Serial.available()) {
         char data = Serial.read();
         if(data == 'O') {
           auth = true;
           state = LOGGED;
         } else if(data == 'K') {
-          state = IDLE;
-          msgService.sendMsg(Msg("F"));
+          state = LOGIN;
+          msgService.sendMsg(Msg("K"));
         }
       }
       break;

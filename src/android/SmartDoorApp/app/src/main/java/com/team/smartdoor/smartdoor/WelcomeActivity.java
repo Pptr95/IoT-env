@@ -11,9 +11,8 @@ public class WelcomeActivity extends AppCompatActivity {
     Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message message) {
-            byte[] readBuff = (byte[])message.obj;
-            String tempMsg = new String(readBuff,0,message.arg1);
-            if(tempMsg == "H") {
+            String tempMsg = (message.obj).toString();
+            if(tempMsg.equals("H")) {
                 Intent myIntent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(myIntent);
             }
@@ -31,5 +30,10 @@ public class WelcomeActivity extends AppCompatActivity {
     public void onStart(){
         super.onStart();
         SendReceive.getInstance().setHandler(handler);
+    }
+
+    @Override
+    public void onBackPressed() {
+        return;
     }
 }

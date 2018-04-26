@@ -6,7 +6,7 @@
 #define CLOSE_POS 20
 #define OPEN_POS 160
 #define MAX_DELAY 5000
-#define SEND_DELAY 5000
+#define SEND_DELAY 10000
 
 extern bool auth;
 extern MsgService msgService;
@@ -51,13 +51,14 @@ void EnvTask::tick() {
      break;
     case DETECTING:
       if((millis() - startTime) >= MAX_DELAY) {
-        msgService.sendMsg(Msg("F")); //send fail to bt
-        Serial.println("F"); // send fail to GW
+        msgService.sendMsg(Msg("P")); //send fail to bt
+        Serial.println("P"); // send fail to GW
         servoDoor.write(CLOSE_POS);
         auth = false;
         state = IDLE;
       } else if(((millis() - startTime) < MAX_DELAY) && pir->isDetected()) {
-        Serial.println("Y");
+        Serial.println("Y"); // activate led on GW
+        msgService.sendMsg(Msg("Y"));
         ledValue->switchOn();
         state = WORKING;
       }

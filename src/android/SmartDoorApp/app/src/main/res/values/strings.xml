@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">SmartDoor</string>
+    <string name="discovered_devices">Device nelle vicinanze:</string>
+    <string name="paired_devices">Device Associati:</string>
+    <string name="scan_devices">Ricerca Devices</string>
+    <string name="welcome">Benvenuto! Avvicinati alla porta e attendi...</string>
+    <string name="loading">Connessione in corso...</string>
+    <string name="auth">Accesso in corso...</string>
+    <string name="ledint">Intensità del led</string>
+    <string name="temp">Temperatura attuale</string>
+    <string name="workActivity">Temperatura attuale</string>
+
+
+
+    <!-- Strings related to login -->
+    <string name="username">Username:</string>
+    <string name="password">Password:</string>
+    <string name="action_sign_in">Login</string>
+    <string name="logout">Logout</string>
+
+</resources>
