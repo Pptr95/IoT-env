@@ -36,7 +36,9 @@
         android:id="@+id/listDiscoveredDevices"
         android:layout_width="match_parent"
         android:layout_height="160dp"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp"
+        android:divider="@null"
+        android:dividerHeight="0dp" />
 
     <Button
         android:id="@+id/scan_devices"
