@@ -6,7 +6,7 @@
 #define CLOSE_POS 20
 #define OPEN_POS 160
 #define MAX_DELAY 5000
-#define SEND_DELAY 10000
+#define SEND_DELAY 5000
 
 extern bool auth;
 extern MsgService msgService;
@@ -35,6 +35,7 @@ void EnvTask::init(int period) {
 void EnvTask::logout() {
     msgService.sendMsg(Msg("L"));
     servoDoor.write(CLOSE_POS);
+    ledValue->setIntensity(0);
     ledValue->switchOff();
     auth = false;
     state = IDLE;
@@ -76,7 +77,7 @@ void EnvTask::tick() {
           logout();
         }
        }
-      int temperature = temp->readTemperature();
+      float temperature = temp->readTemperature();
       int ledIntensity = ledValue->getIntensity();
       if((millis() - startTime) >= SEND_DELAY) {
         Serial.print("[");

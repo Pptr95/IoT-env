@@ -5,7 +5,7 @@ class TempSensor {
 
  public: 
   TempSensor(int pin);
-  int readTemperature();
+  float readTemperature();
 
 private:
   int pin;
