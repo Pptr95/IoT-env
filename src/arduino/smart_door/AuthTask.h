@@ -24,3 +24,4 @@ class AuthTask: public Task {
 };
 
 #endif
+

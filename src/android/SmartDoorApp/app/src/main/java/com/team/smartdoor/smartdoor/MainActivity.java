@@ -50,8 +50,13 @@ public class MainActivity extends AppCompatActivity {
         discoveredNames = new ArrayList<>();
         IntentFilter intentFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(br, intentFilter);
-        discoveredAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, discoveredNames);
+        discoveredAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.mytextview, discoveredNames);
         listViewDiscoveredDevices.setAdapter(discoveredAdapter);
+        if(getIntent().getBooleanExtra("restart",false)){
+            finish();
+            int pid = android.os.Process.myPid();
+            android.os.Process.killProcess(pid);
+        }
 
         scanButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,16 +141,16 @@ public class MainActivity extends AppCompatActivity {
         for(BluetoothDevice bt : pairedDevices) {
             pairedNames.add(bt.getName());
         }
-        ArrayAdapter<String> pairedAdapter = new  ArrayAdapter<>(getApplicationContext(),android.R.layout.simple_list_item_1, pairedNames);
+        ArrayAdapter<String> pairedAdapter = new  ArrayAdapter<>(getApplicationContext(), R.layout.mytextview, pairedNames);
         listViewPairedDevices.setAdapter(pairedAdapter);
     }
 
     private final BroadcastReceiver br = new BroadcastReceiver(){
-       @Override
+        @Override
         public void onReceive(Context context , Intent intent){
             if(BluetoothDevice.ACTION_FOUND.equals(intent.getAction())){
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                if(!discoveredDevices.contains(device)) {
+                if(!discoveredDevices.contains(device) && device.getName() != null) {
                     discoveredDevices.add(device);
                 }
                 discoveredNames.clear();
@@ -200,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
             final ProgressDialog dialog = new ProgressDialog(getActivity());
             dialog.setMessage(getString(R.string.loading));
             dialog.setIndeterminate(true);
+            dialog.setCanceledOnTouchOutside(false);
             return dialog;
         }
     }
@@ -209,4 +215,3 @@ public class MainActivity extends AppCompatActivity {
         return;
     }
 }
-

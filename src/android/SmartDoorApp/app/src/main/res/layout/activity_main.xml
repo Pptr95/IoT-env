@@ -14,27 +14,29 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:layout_marginTop="16dp"
-        android:text="@string/paired_devices" />
+        android:text="@string/paired_devices"
+        android:textSize="20sp"/>
 
     <ListView
         android:id="@+id/listPairedDevices"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:background="@android:color/darker_gray" />
+        android:layout_height="160dp"
+        android:divider="@null"
+        android:dividerHeight="0dp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:layout_marginTop="16dp"
-        android:text="@string/discovered_devices" />
+        android:text="@string/discovered_devices"
+        android:textSize="20sp"/>
 
     <ListView
         android:id="@+id/listDiscoveredDevices"
         android:layout_width="match_parent"
-        android:layout_marginBottom="16dp"
-        android:layout_height="300dp"
-        android:background="@android:color/darker_gray" />
+        android:layout_height="160dp"
+        android:layout_marginBottom="16dp" />
 
     <Button
         android:id="@+id/scan_devices"
@@ -42,5 +44,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:layout_marginTop="16dp"
-        android:text="@string/scan_devices" />
+        android:text="@string/scan_devices"
+        android:background = "@drawable/roundedbutton"/>
 </LinearLayout>

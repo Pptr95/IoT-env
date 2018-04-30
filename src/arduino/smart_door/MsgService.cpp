@@ -12,7 +12,7 @@ void MsgService::init(){
 }
 
 bool MsgService::sendMsg(Msg msg){
-  channel->println(msg.getContent());  
+  channel->println(msg.getContent() + "/");  
 }
 
 bool MsgService::isMsgAvailable(){
@@ -30,6 +30,7 @@ Msg* MsgService::receiveMsg(){
     return NULL;  
   }
 }
+
 
 
 

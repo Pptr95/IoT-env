@@ -36,7 +36,7 @@ void AuthTask::tick() {
         state = IDLE;
       } else if((millis() - startTime) >= MIN_SEC){
         state = LOGIN;
-        msgService.sendMsg(Msg("H"));  
+        msgService.sendMsg(Msg("H")); 
       }
       break;
     case LOGIN:
@@ -72,3 +72,4 @@ void AuthTask::tick() {
       break;
   }
 }
+

@@ -13,3 +13,4 @@ void Led::switchOn(){
 void Led::switchOff(){
   digitalWrite(pin,LOW);
 };
+

@@ -26,25 +26,26 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public boolean handleMessage(Message message) {
             String tempMsg = (message.obj).toString();
-            waitAuthFragment.dismiss();
-            if(tempMsg.equals("A")){
+            if(tempMsg.contains("A")){
                 Intent myIntent = new Intent(getApplicationContext(), WelcomeActivity.class);
                 startActivity(myIntent);
                 Toast.makeText(getApplicationContext(), "Attenzione ti sei allontanato troppo!", Toast.LENGTH_LONG).show();
             }
-            else if(tempMsg.equals("Y")){
+            else if(tempMsg.contains("Y")){
                 Intent myIntent = new Intent(getApplicationContext(), WorkingActivity.class);
                 startActivity(myIntent);
             }
-            else if(tempMsg.equals("K")){
+            else if(tempMsg.contains("K")){
                 txtPassword.setText("");
                 txtUsername.setText("");
                 Toast.makeText(getApplicationContext(), "Username o password sbagliate", Toast.LENGTH_LONG).show();
+                waitAuthFragment.dismiss();
             }
-            else if(tempMsg.equals("P")){
+            else if(tempMsg.contains("P")){
                 Intent myIntent = new Intent(getApplicationContext(), WelcomeActivity.class);
                 startActivity(myIntent);
                 Toast.makeText(getApplicationContext(), "Attenzione presenza non rilevata!", Toast.LENGTH_LONG).show();
+                waitAuthFragment.dismiss();
             }
             return true;
         }
@@ -87,6 +88,7 @@ public class LoginActivity extends AppCompatActivity {
             final ProgressDialog dialog = new ProgressDialog(getActivity());
             dialog.setMessage(getString(R.string.auth));
             dialog.setIndeterminate(true);
+            dialog.setCanceledOnTouchOutside(false);
             return dialog;
         }
     }

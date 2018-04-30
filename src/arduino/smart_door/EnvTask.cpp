@@ -61,6 +61,7 @@ void EnvTask::tick() {
         msgService.sendMsg(Msg("Y"));
         ledValue->switchOn();
         state = WORKING;
+        startTime = millis();
       }
       break;
     case WORKING:
@@ -75,7 +76,7 @@ void EnvTask::tick() {
           logout();
         }
        }
-      float temperature = temp->readTemperature();
+      int temperature = temp->readTemperature();
       int ledIntensity = ledValue->getIntensity();
       if((millis() - startTime) >= SEND_DELAY) {
         Serial.print("[");
@@ -92,3 +93,4 @@ void EnvTask::tick() {
       break;
   }
 }
+

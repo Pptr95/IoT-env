@@ -17,3 +17,4 @@ bool PirImpl::isDetected(){
     return false;
   }
 };
+

@@ -6,8 +6,9 @@ TempSensor::TempSensor(int pin) {
   pinMode(pin, INPUT);     
 } 
 
-float TempSensor::readTemperature() {
+int TempSensor::readTemperature() {
   int temp = analogRead(pin);
-  float tempC = temp * 0.48875;
+  int tempC = temp * 0.48875;
   return tempC;
 }
+

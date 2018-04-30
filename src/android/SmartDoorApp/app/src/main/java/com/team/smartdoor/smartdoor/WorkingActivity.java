@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class WorkingActivity extends AppCompatActivity {
 
@@ -22,16 +23,11 @@ public class WorkingActivity extends AppCompatActivity {
         @Override
         public boolean handleMessage(Message message) {
             String tempMsg = (message.obj).toString();
-            if(tempMsg.equals("L")){
+            if(tempMsg.contains("L")){
                restartApp();
             }
             else{
-                try {
-                    double tempValue = Double.parseDouble(tempMsg);
-                    txtTemp.setText(tempValue + "°C");
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
+                txtTemp.setText(tempMsg + " °C");
             }
             return true;
         }
@@ -45,14 +41,14 @@ public class WorkingActivity extends AppCompatActivity {
         txtTemp = (TextView) findViewById(R.id.txtTemp);
         btnLogout = (Button) findViewById(R.id.btnLogout);
         barLedValue = (SeekBar) findViewById(R.id.barLedValue);
-        txtLedValue.setText(progress);
+        txtLedValue.setText(String.valueOf(progress));
         txtTemp.setText("- °C");
 
-        barLedValue.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+          barLedValue.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 progress = i;
-                txtLedValue.setText(progress);
+                txtLedValue.setText(String.valueOf(progress));
             }
 
             @Override
@@ -77,8 +73,7 @@ public class WorkingActivity extends AppCompatActivity {
     @Override
     public void onStart(){
         super.onStart();
-        SendReceive.getInstance().setHandler(handler);
-
+       SendReceive.getInstance().setHandler(handler);
     }
 
     @Override
@@ -87,10 +82,13 @@ public class WorkingActivity extends AppCompatActivity {
     }
 
     public void restartApp(){
-        Intent i = getBaseContext().getPackageManager()
-                .getLaunchIntentForPackage( getBaseContext().getPackageName() );
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        SendReceive.getInstance().write("L");
+        SendReceive.getInstance().cancel();
+        Intent i = new Intent(this,MainActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        i.putExtra("restart",true);
         startActivity(i);
+        finish();
     }
 }
 

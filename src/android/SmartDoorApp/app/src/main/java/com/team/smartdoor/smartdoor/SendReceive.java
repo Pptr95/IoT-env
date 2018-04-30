@@ -45,12 +45,18 @@ public class SendReceive extends Thread {
     }
 
     public void run(){
-        byte[] buffer = new byte[1024];
         int bytes;
+        String message = "";
+        byte ch = 0;
         while (!stop){
             try{
-                bytes = inputStream.read(buffer);
-                String message = new String(buffer,0,bytes);
+                bytes = 0;
+                message = "";
+                while((ch=(byte)inputStream.read())!='/') {
+                    bytes++;
+                    message+=Character.toString((char)ch);
+                }
+                message.replace("/", "").replace("\n", "").replace("\\r", "");
                 handler.obtainMessage(-1,bytes,-1,message).sendToTarget();
             } catch (IOException ex){
                 stop = true;
@@ -68,8 +74,12 @@ public class SendReceive extends Thread {
 
     public void cancel(){
         try{
+            inputStream.close();
+            outputStream.close();
             btSocket.close();
         }catch (IOException ex) {
+        }
+        finally {
             stop = true;
         }
     }

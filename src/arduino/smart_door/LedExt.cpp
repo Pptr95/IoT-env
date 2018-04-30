@@ -31,3 +31,4 @@ void LedExt::switchOff(){
 int LedExt::getIntensity(){
   return currentIntensity;
 }
+
