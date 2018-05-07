@@ -9,15 +9,10 @@ import java.nio.file.Paths;
 public class Logger {
 
 	private PrintWriter writer;
-	private int num;
 	
-	public Logger() {
-		this.num = 0;
-	}
-	
-	public void initializeLog() throws FileNotFoundException, UnsupportedEncodingException {
-		this.num++;
-		this.writer = new PrintWriter(Paths.get(".").toAbsolutePath().normalize().toString()+File.separator+"src/smartradar/log" + this.num + ".txt", "UTF-8");
+	//DA AGGIUSTARE
+	public Logger() throws FileNotFoundException, UnsupportedEncodingException {
+		this.writer = new PrintWriter(Paths.get(".").toAbsolutePath().normalize().toString()+File.separator+"src/smartdoor/log" +   ".txt", "UTF-8");
 	}
 	
 	public void writeLog(final String log) {

@@ -3,10 +3,11 @@ package devices;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.util.Arrays;
-
-import events.DataScanningReceived;
-import events.RadarSpinCompleted;
+import events.LoginDataReceived;
+import events.LoginGranted;
+import events.MotionNotDetected;
+import events.SessionEnded;
+import events.WorkingDataReceived;
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
@@ -15,8 +16,11 @@ import utils.Observable;
 
 public class InputMsgReceiver extends Observable implements SerialPortEventListener {
 
-	private static final char SCANNED_SIGNAL = '[';
-	private static final String SPIN_COMPLETED = "F";
+	private static final char WORKING_SIGNAL = '[';
+	private static final char LOGIN_SIGNAL = '{';
+	private static final String LOGIN_GRANTED = "Y";
+	private static final String MOTION_NOT_DETECTED = "P";
+	private static final String SESSION_ENDED = "L";
 	private SerialPort serialPort;
 	private BufferedReader input;
 	private OutputStream output;
@@ -63,27 +67,28 @@ public class InputMsgReceiver extends Observable implements SerialPortEventListe
 		}
 	}
 
-	private float getDistance(final String distance) {
-		return Float.valueOf(Arrays.asList(distance.replace("[", "").replace("]", "").split(" ")).get(0));
-	}
-
-	private int getAngle(final String angle) {
-		return Integer.valueOf(Arrays.asList(angle.replace("[", "").replace("]", "").split(" ")).get(1));
-	}
-
+	
 	@Override
 	public synchronized void serialEvent(SerialPortEvent oEvent) {
 		if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
 			try {
 				String msg = input.readLine();
-				if (msg.equals(SPIN_COMPLETED)) {
-					notifyEvent(new RadarSpinCompleted());
-				} else if (msg.charAt(0) == SCANNED_SIGNAL) {
-					notifyEvent(new DataScanningReceived(this.getDistance(msg), this.getAngle(msg)));
+				if (msg.equals(LOGIN_GRANTED)) {
+					notifyEvent(new LoginGranted());
+				}else if(msg.equals(MOTION_NOT_DETECTED)) {
+					notifyEvent(new MotionNotDetected());
+				}else if(msg.equals(SESSION_ENDED)) {
+					notifyEvent(new SessionEnded());
+				}else if (msg.charAt(0) == WORKING_SIGNAL) {
+					notifyEvent(new WorkingDataReceived(msg));
+				}else if (msg.charAt(0) == LOGIN_SIGNAL) {
+					notifyEvent(new LoginDataReceived(msg));
 				}
+				
 			} catch (Exception e) {
 				System.err.println(e.toString());
 			}
 		}
 	}
 }
+	

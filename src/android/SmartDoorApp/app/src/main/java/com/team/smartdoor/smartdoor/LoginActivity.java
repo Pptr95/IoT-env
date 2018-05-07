@@ -65,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String username = txtUsername.getText().toString();
                 String password = txtPassword.getText().toString();
-                SendReceive.getInstance().write(username+"/"+ password);
+                SendReceive.getInstance().write("{" + username + " " + password + "}");
                 waitAuthFragment.show(getFragmentManager(), "auth");
             }
         });
