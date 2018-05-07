@@ -10,8 +10,6 @@
     <string name="temp">Temperatura attuale</string>
     <string name="workActivity">Temperatura attuale</string>
 
-
-
     <!-- Strings related to login -->
     <string name="username">Username</string>
     <string name="password">Password</string>
