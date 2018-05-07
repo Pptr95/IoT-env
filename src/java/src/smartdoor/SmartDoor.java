@@ -71,7 +71,7 @@ public class SmartDoor extends BasicEventLoopController {
 				}
 				break;
 
-			case LOGGED:
+			/*case LOGGED:
 				if (ev instanceof ButtonOffPressed) {
 					this.state = State.IDLE;
 					this.ledOn.switchOff();
@@ -94,7 +94,7 @@ public class SmartDoor extends BasicEventLoopController {
 					this.counter.incScanCount();
 					this.counter.resetCount();
 				}
-				break;
+				break;*/
 
 			}
 		} catch (Exception ex) {

@@ -1,18 +1,17 @@
 package utils;
 
 import java.io.Serializable;
+import java.util.Enumeration;
 import java.util.Locale;
-import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 
 public class Resource implements Serializable {
   
     private static final long serialVersionUID = -3325080430848316075L;
-    private final transient ResourceBundle res;
+    private final ResourceBundle res;
    
     public Resource() {
-        Locale.setDefault(new Locale("en", "US"));
         this.res = ResourceBundle.getBundle("Users", Locale.getDefault());
     }
     
