@@ -9,6 +9,8 @@ import devices.InputMsgReceiver;
 import events.LoginDataReceived;
 import events.LoginGranted;
 import events.MotionNotDetected;
+import events.SessionEnded;
+import events.WorkingDataReceived;
 import interfaces.Event;
 import interfaces.Light;
 import utils.Logger;
@@ -28,6 +30,7 @@ public class SmartDoor extends BasicEventLoopController {
 	private Light ledInside;
 	private Light ledFailed;
 	private final Resource res = new Resource();
+	private String currentUser;
 
 	public SmartDoor(InputMsgReceiver serialInput, Light ledInside, Light ledFailed)
 			throws FileNotFoundException, UnsupportedEncodingException {
@@ -48,11 +51,15 @@ public class SmartDoor extends BasicEventLoopController {
 					LoginDataReceived event = ((LoginDataReceived) ev);
 					if (res.checkUserExist(event.getUsername())
 							&& res.getPassword(event.getUsername()).equals(event.getPassword())) {
+						this.currentUser = event.getUsername();
 						this.state = State.WAITING;
 						this.serialInput.sendMsg(LOGIN_OK);
 					} else {
 						this.serialInput.sendMsg(LOGIN_FAIL);
-						//FARE LOG
+						final String msg = "Time: "
+								+ new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Calendar.getInstance().getTime())
+								+ " - Login failed for user: " + event.getUsername();
+						logger.writeLog(msg);
 					}
 				}
 				break;
@@ -61,40 +68,33 @@ public class SmartDoor extends BasicEventLoopController {
 				if (ev instanceof LoginGranted) {
 					this.state = State.LOGGED;
 					this.ledInside.switchOn();
-					//FARE LOG
+					final String msg = "Time: "
+							+ new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Calendar.getInstance().getTime())
+							+ " - Login granted for user: " + this.currentUser;
+					logger.writeLog(msg);
 				} else if (ev instanceof MotionNotDetected) {
 					this.state = State.IDLE;
-					//FARE LOG
+					final String msg = "Time: "
+							+ new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Calendar.getInstance().getTime())
+							+ " - Motion sensor didn't detect the user: " + this.currentUser;
+					logger.writeLog(msg);
 					this.ledFailed.switchOn();
 					Thread.sleep(300);
 					this.ledFailed.switchOff();
 				}
 				break;
 
-			/*case LOGGED:
-				if (ev instanceof ButtonOffPressed) {
-					this.state = State.IDLE;
-					this.ledOn.switchOff();
-					this.serialInput.sendMsg(IDLE);
-					this.logger.closeLog();
-				} else if (ev instanceof LoginDataReceived && ((LoginDataReceived) ev).getDistance() > DIST_MAX) {
-					this.state = State.NOT_DETECTED;
-				} else if (ev instanceof LoginDataReceived && ((LoginDataReceived) ev).getDistance() < DIST_MIN) {
-					this.ledTracking.switchOn();
-					this.state = State.TRACKING;
+			case LOGGED:
+				if (ev instanceof WorkingDataReceived) {
+					//CREARE SOCKET E AGG TEMP E L INTENSITY
+				}else if (ev instanceof SessionEnded) {
+					ledInside.switchOff();
 					final String msg = "Time: "
 							+ new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Calendar.getInstance().getTime())
-							+ " - Object tracked at angle " + ((LoginDataReceived) ev).getAngle() + " distance "
-							+ ((LoginDataReceived) ev).getDistance();
-					System.out.println(msg);
-					this.serialInput.sendMsg(TRACK);
-				} else if (ev instanceof LoginGranted) {
-					System.out.println("Scan: " + this.counter.getScanCount() + " -- detected: "
-							+ this.counter.getCount() + " objects");
-					this.counter.incScanCount();
-					this.counter.resetCount();
+							+ " - Motion sensor didn't detect the user: " + this.currentUser;
+					logger.writeLog(msg);
 				}
-				break;*/
+				break;
 
 			}
 		} catch (Exception ex) {
@@ -102,3 +102,11 @@ public class SmartDoor extends BasicEventLoopController {
 		}
 	}
 }
+
+
+
+/*final String msg = "Time: "
+		+ new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Calendar.getInstance().getTime())
+		+ " - Object tracked at angle " + ((LoginDataReceived) ev).getAngle() + " distance "
+		+ ((LoginDataReceived) ev).getDistance();
+this.serialInput.sendMsg(TRACK);*/
