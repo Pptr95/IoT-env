@@ -11,7 +11,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -27,6 +29,7 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity {
 
     final int REQUEST_ENABLE_BT = 1;
+    private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
     ArrayList<BluetoothDevice> pairedDevices;
     ArrayList<String> pairedNames;
     ListView listViewPairedDevices;
@@ -43,6 +46,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (this.checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                        PERMISSION_REQUEST_COARSE_LOCATION);
+            }
+        }
         listViewPairedDevices = (ListView)findViewById(R.id.listPairedDevices);
         listViewDiscoveredDevices = (ListView)findViewById(R.id.listDiscoveredDevices);
         scanButton = (Button)findViewById(R.id.scan_devices);
