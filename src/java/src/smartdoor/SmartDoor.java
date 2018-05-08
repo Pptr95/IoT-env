@@ -15,6 +15,7 @@ import interfaces.Event;
 import interfaces.Light;
 import utils.Logger;
 import utils.Resource;
+import utils.ServerUDP;
 
 public class SmartDoor extends BasicEventLoopController {
 
@@ -24,6 +25,7 @@ public class SmartDoor extends BasicEventLoopController {
 
 	private static final String LOGIN_OK = "O";
 	private static final String LOGIN_FAIL = "K";
+	private ServerUDP server;
 	private Logger logger;
 	private State state;
 	private InputMsgReceiver serialInput;
@@ -32,7 +34,7 @@ public class SmartDoor extends BasicEventLoopController {
 	private final Resource res = new Resource();
 	private String currentUser;
 
-	public SmartDoor(InputMsgReceiver serialInput, Light ledInside, Light ledFailed)
+	public SmartDoor(InputMsgReceiver serialInput, ServerUDP server, Light ledInside, Light ledFailed)
 			throws FileNotFoundException, UnsupportedEncodingException {
 		this.ledInside = ledInside;
 		this.ledFailed = ledFailed;
@@ -40,6 +42,7 @@ public class SmartDoor extends BasicEventLoopController {
 		this.serialInput.addObserver(this);
 		this.state = State.IDLE;
 		this.logger = new Logger();
+		this.server = server;
 	}
 
 	@Override
@@ -86,8 +89,9 @@ public class SmartDoor extends BasicEventLoopController {
 
 			case LOGGED:
 				if (ev instanceof WorkingDataReceived) {
-					//CREARE SOCKET E AGG TEMP E L INTENSITY
-				}else if (ev instanceof SessionEnded) {
+					this.server.setTemperature(((WorkingDataReceived) ev).getTemperature());
+					this.server.setLedIntensity(((WorkingDataReceived) ev).getLedIntensity());
+				} else if (ev instanceof SessionEnded) {
 					ledInside.switchOff();
 					final String msg = "Time: "
 							+ new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Calendar.getInstance().getTime())
@@ -95,18 +99,9 @@ public class SmartDoor extends BasicEventLoopController {
 					logger.writeLog(msg);
 				}
 				break;
-
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 }
-
-
-
-/*final String msg = "Time: "
-		+ new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Calendar.getInstance().getTime())
-		+ " - Object tracked at angle " + ((LoginDataReceived) ev).getAngle() + " distance "
-		+ ((LoginDataReceived) ev).getDistance();
-this.serialInput.sendMsg(TRACK);*/
