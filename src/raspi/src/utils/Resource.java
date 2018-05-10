@@ -1,7 +1,6 @@
 package utils;
 
 import java.io.Serializable;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class Resource implements Serializable {
@@ -10,8 +9,7 @@ public class Resource implements Serializable {
 	private final ResourceBundle res;
 
 	public Resource() {
-		Locale.setDefault(new Locale("en", "US"));
-		this.res = ResourceBundle.getBundle("Users", Locale.getDefault());
+		this.res = ResourceBundle.getBundle("Users");
 	}
 
 	public boolean checkUserExist(final String username) {
