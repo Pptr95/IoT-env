@@ -70,7 +70,7 @@ public final class Monitor {
 
 		btnConnect.addActionListener(e -> {
 			try {
-				this.client = new ClientUDP(this, "localhost");
+				this.client = new ClientUDP(this, this.textAdress.getText());
 				this.client.start();
 			} catch (SocketException | UnknownHostException e1) {
 				e1.printStackTrace();

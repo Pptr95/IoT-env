@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="res"/>
 	<classpathentry kind="lib" path="lib/pi4j/dio.jar"/>
 	<classpathentry kind="lib" path="lib/pi4j/pi4j-core-javadoc.jar"/>
 	<classpathentry kind="lib" path="lib/pi4j/pi4j-core-sources.jar"/>
