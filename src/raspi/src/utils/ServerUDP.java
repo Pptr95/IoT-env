@@ -1,11 +1,14 @@
 package utils;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class ServerUDP extends Thread {
 	static int buffSize = 4096;
@@ -48,7 +51,9 @@ public class ServerUDP extends Thread {
 		if (request.equals("LOG")) {
 			byte[] encoded;
 			try {
-				encoded = Files.readAllBytes(Paths.get("log.txt"));
+				String path = System.getProperty("user.home") + File.separator + "SmartDoor_Logs" + File.separator
+						+ new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime()) + ".txt";
+				encoded = Files.readAllBytes(Paths.get(path));
 				response = new String(encoded, "UTF-8");
 			} catch (IOException e) {
 				e.printStackTrace();

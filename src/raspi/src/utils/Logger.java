@@ -5,22 +5,24 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class Logger {
 
 	private PrintWriter writer;
-	
-	//DA AGGIUSTARE
+
 	public Logger() throws FileNotFoundException, UnsupportedEncodingException {
-		this.writer = new PrintWriter(new FileOutputStream(new File("log.txt"),true));
-		//this.writer = new PrintWriter(Paths.get(".").toAbsolutePath().normalize().toString()+File.separator+"src/smartdoor/log" +   ".txt", "UTF-8");
+		String homeFolder = System.getProperty("user.home");
+		File log = new File(homeFolder + File.separator + "SmartDoor_Logs" + File.separator
+				+ new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime()) + ".txt");
+		this.writer = new PrintWriter(new FileOutputStream(log, true));
 	}
-	
+
 	public void writeLog(final String log) {
 		this.writer.println(log);
 	}
-	
+
 	public void closeLog() {
 		this.writer.close();
 	}

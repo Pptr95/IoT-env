@@ -1,7 +1,6 @@
 package utils;
 
 import java.io.Serializable;
-import java.util.Enumeration;
 import java.util.Locale;
 import java.util.ResourceBundle;
 

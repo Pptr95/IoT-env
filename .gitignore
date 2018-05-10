@@ -1,2 +1,4 @@
 .DS_Store
-src/java/bin/
+src/raspi/bin/
+src/raspi_monitor/bin/
+
