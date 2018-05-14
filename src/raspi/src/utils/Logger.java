@@ -21,6 +21,7 @@ public class Logger {
 
 	public void writeLog(final String log) {
 		this.writer.println(log);
+		this.writer.flush();
 	}
 
 	public void closeLog() {
