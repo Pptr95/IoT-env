@@ -68,7 +68,7 @@ public class ServerUDP extends Thread {
 		sendBuff = response.getBytes();
 		DatagramPacket sendPacket = new DatagramPacket(sendBuff, sendBuff.length, clientAddr, clientPort);
 		sock.send(sendPacket);
-		System.out.println("INVIATAAAAAAA");
+		System.out.println("INVIATAAAAAAA   " + clientAddr.toString() + "   "+ clientPort);
 		sock.close();
 	}
 }
