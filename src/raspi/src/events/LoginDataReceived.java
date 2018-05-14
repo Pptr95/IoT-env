@@ -13,8 +13,13 @@ public class LoginDataReceived implements Event {
 	public LoginDataReceived(String msg) {
 		super();
 		List<String> tmp = Arrays.asList(msg.replace("{", "").replace("}", "").split(" "));
-		this.username = tmp.get(0);
-		this.password = tmp.get(1);
+		if(tmp.size() == 2) {
+			this.username = tmp.get(0);
+			this.password = tmp.get(1);
+		} else {
+			this.username = "-";
+			this.password = "-";
+		}
 	}
 	
 	public String getUsername() {

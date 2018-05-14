@@ -18,5 +18,5 @@ public class Resource implements Serializable {
 
 	public String getPassword(final String username) {
 		return this.res.getString(username);
-	}	
+	}
 }
