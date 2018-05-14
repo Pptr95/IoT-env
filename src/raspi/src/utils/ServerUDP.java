@@ -53,8 +53,8 @@ public class ServerUDP extends Thread {
 		if (request.equals("LOG")) {
 			byte[] encoded;
 			try {
-				String path = System.getProperty(Paths.get(".").toAbsolutePath().normalize().toString()+File.separator+ "logs" + File.separator
-						+ new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime()) + ".txt");
+				String path = Paths.get(".").toAbsolutePath().normalize().toString()+File.separator+ "logs" + File.separator
+						+ new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime()) + ".txt";
 				encoded = Files.readAllBytes(Paths.get(path));
 				response = new String(encoded, "UTF-8");
 			} catch (IOException e) {
