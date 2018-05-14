@@ -47,11 +47,13 @@ public class ServerUDP extends Thread {
 		InetAddress clientAddr = recvPacket.getAddress();
 		int clientPort = recvPacket.getPort();
 		String response = new String();
-
+		
+		System.out.println(request);
+		
 		if (request.equals("LOG")) {
 			byte[] encoded;
 			try {
-				String path = System.getProperty(Paths.get(".").toAbsolutePath().normalize().toString()+File.separator+ "SmartDoor_Logs" + File.separator
+				String path = System.getProperty(Paths.get(".").toAbsolutePath().normalize().toString()+File.separator+ "logs" + File.separator
 						+ new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime()) + ".txt");
 				encoded = Files.readAllBytes(Paths.get(path));
 				response = new String(encoded, "UTF-8");

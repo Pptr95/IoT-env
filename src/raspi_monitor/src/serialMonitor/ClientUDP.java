@@ -22,6 +22,7 @@ public class ClientUDP extends Thread {
 		sendBuff = request.getBytes();
 		DatagramPacket sendPacket = new DatagramPacket(sendBuff, sendBuff.length, this.servAddr, this.servPort);
 		sock.send(sendPacket);
+		System.out.println("Richiesta Inviata:"+request);
 	}
 
 	String getResponse() throws IOException {
@@ -29,7 +30,8 @@ public class ClientUDP extends Thread {
 		DatagramPacket recvPacket = new DatagramPacket(recvBuff, buffSize);
 		sock.receive(recvPacket);
 		recvBuff = recvPacket.getData();
-		return new String(recvBuff, 0, recvPacket.getLength());
+		System.out.println(new String(recvBuff, 0, recvPacket.getLength()));
+		return new String(recvBuff, 0, recvPacket.getLength());	
 	}
 
 	public void run() {

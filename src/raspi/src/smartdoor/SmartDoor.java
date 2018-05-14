@@ -97,6 +97,7 @@ public class SmartDoor extends BasicEventLoopController {
 							+ new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Calendar.getInstance().getTime())
 							+ " - Motion sensor didn't detect the user: " + this.currentUser;
 					logger.writeLog(msg);
+					logger.closeLog();
 				}
 				break;
 			}
