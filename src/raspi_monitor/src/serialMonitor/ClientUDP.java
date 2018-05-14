@@ -15,6 +15,7 @@ public class ClientUDP extends Thread {
 	public ClientUDP(final Monitor monitor, final String serverAddress) throws SocketException, UnknownHostException {
 		this.sock = new DatagramSocket();
 		this.servAddr = InetAddress.getByName(serverAddress);
+		this.monitor = monitor;
 	}
 
 	void sendRequest(String request) throws IOException {
