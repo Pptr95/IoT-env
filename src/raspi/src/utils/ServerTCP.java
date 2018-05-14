@@ -14,8 +14,8 @@ import java.util.Calendar;
 
 public class ServerTCP extends Thread {
 	static int buffSize = 4096;
-	private float temperature;
-	private int ledIntensity;
+	private float temperature = 0;
+	private int ledIntensity = 0;
 	private 	DataOutputStream outToClient;
 
 	public void setTemperature(float temperature) {
