@@ -1,19 +1,22 @@
 package utils;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class ServerUDP extends Thread {
+public class ServerTCP extends Thread {
 	static int buffSize = 4096;
 	private float temperature;
 	private int ledIntensity;
+	private 	DataOutputStream outToClient;
 
 	public void setTemperature(float temperature) {
 		this.temperature = temperature;
@@ -25,30 +28,23 @@ public class ServerUDP extends Thread {
 
 	public void run() {
 		try {
-			final int port = 6789;
 			@SuppressWarnings("resource")
-			DatagramSocket servSock = new DatagramSocket(port);
+			ServerSocket servSock = new ServerSocket(6789); 
 			while (true) {
-				byte[] recvBuff = new byte[buffSize];
-				DatagramPacket newPacket = new DatagramPacket(recvBuff, buffSize);
-				servSock.receive(newPacket);
-				processRequest(newPacket);
+				Socket connectionSocket = servSock.accept();
+				BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+				outToClient = new DataOutputStream(connectionSocket.getOutputStream());
+				String request = inFromClient.readLine();
+				processRequest(request);
+				connectionSocket.close();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void processRequest(DatagramPacket recvPacket) throws IOException {
-		byte[] recvBuff = new byte[buffSize];
-		recvBuff = recvPacket.getData();
-		String request = new String(recvBuff, 0, recvPacket.getLength());
-		InetAddress clientAddr = recvPacket.getAddress();
-		int clientPort = recvPacket.getPort();
+	private void processRequest(String request) throws IOException {
 		String response = new String();
-		
-		System.out.println(request);
-		
 		if (request.equals("LOG")) {
 			byte[] encoded;
 			try {
@@ -62,13 +58,6 @@ public class ServerUDP extends Thread {
 		} else if (request.equals("UPDATE")) {
 			response = new String(Float.toString(temperature) + "/" + Integer.toString(ledIntensity));
 		}
-		System.out.println(response);
-		DatagramSocket sock = new DatagramSocket();
-		byte[] sendBuff = new byte[buffSize];
-		sendBuff = response.getBytes();
-		DatagramPacket sendPacket = new DatagramPacket(sendBuff, sendBuff.length, clientAddr, clientPort);
-		sock.send(sendPacket);
-		System.out.println("INVIATAAAAAAA   " + clientAddr.toString() + "   "+ clientPort);
-		sock.close();
+		outToClient.writeBytes(response);
 	}
 }

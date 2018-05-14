@@ -15,7 +15,7 @@ import interfaces.Event;
 import interfaces.Light;
 import utils.Logger;
 import utils.Resource;
-import utils.ServerUDP;
+import utils.ServerTCP;
 
 public class SmartDoor extends BasicEventLoopController {
 
@@ -25,7 +25,7 @@ public class SmartDoor extends BasicEventLoopController {
 
 	private static final String LOGIN_OK = "O";
 	private static final String LOGIN_FAIL = "K";
-	private ServerUDP server;
+	private ServerTCP server;
 	private Logger logger;
 	private State state;
 	private InputMsgReceiver serialInput;
@@ -34,7 +34,7 @@ public class SmartDoor extends BasicEventLoopController {
 	private final Resource res = new Resource();
 	private String currentUser;
 
-	public SmartDoor(InputMsgReceiver serialInput, ServerUDP server, Light ledInside, Light ledFailed)
+	public SmartDoor(InputMsgReceiver serialInput, ServerTCP server, Light ledInside, Light ledFailed)
 			throws FileNotFoundException, UnsupportedEncodingException {
 		this.ledInside = ledInside;
 		this.ledFailed = ledFailed;
@@ -89,12 +89,10 @@ public class SmartDoor extends BasicEventLoopController {
 
 			case LOGGED:
 				if (ev instanceof WorkingDataReceived) {
-					System.out.println("STATE LOGGED");
 					this.server.setTemperature(((WorkingDataReceived) ev).getTemperature());
 					this.server.setLedIntensity(((WorkingDataReceived) ev).getLedIntensity());
 				} else if (ev instanceof SessionEnded) {
 					ledInside.switchOff();
-					System.out.println("SESSION ENDED");
 					final String msg = "Time: "
 							+ new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Calendar.getInstance().getTime())
 							+ " - Motion sensor didn't detect the user: " + this.currentUser;

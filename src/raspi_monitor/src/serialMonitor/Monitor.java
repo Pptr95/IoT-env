@@ -3,8 +3,6 @@ package serialMonitor;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -18,7 +16,7 @@ import javax.swing.text.DefaultCaret;
 
 public final class Monitor {
 
-	private ClientUDP client;
+	private ClientTCP client;
 	private JTextArea textLog;
 	private JTextField textAdress;
 	private JButton btnConnect;
@@ -69,12 +67,8 @@ public final class Monitor {
 		frame.setVisible(true);
 
 		btnConnect.addActionListener(e -> {
-			try {
-				this.client = new ClientUDP(this, this.textAdress.getText());
-				this.client.start();
-			} catch (SocketException | UnknownHostException e1) {
-				e1.printStackTrace();
-			}
+			this.client = new ClientTCP(this, this.textAdress.getText());
+			this.client.start();
 		});
 	}
 
