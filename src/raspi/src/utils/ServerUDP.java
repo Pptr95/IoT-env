@@ -33,7 +33,6 @@ public class ServerUDP extends Thread {
 				DatagramPacket newPacket = new DatagramPacket(recvBuff, buffSize);
 				servSock.receive(newPacket);
 				processRequest(newPacket);
-
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -63,12 +62,13 @@ public class ServerUDP extends Thread {
 		} else if (request.equals("UPDATE")) {
 			response = new String(Float.toString(temperature) + "/" + Integer.toString(ledIntensity));
 		}
-
+		System.out.println(response);
 		DatagramSocket sock = new DatagramSocket();
 		byte[] sendBuff = new byte[buffSize];
 		sendBuff = response.getBytes();
 		DatagramPacket sendPacket = new DatagramPacket(sendBuff, sendBuff.length, clientAddr, clientPort);
 		sock.send(sendPacket);
+		System.out.println("INVIATAAAAAAA");
 		sock.close();
 	}
 }

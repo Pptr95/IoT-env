@@ -34,6 +34,7 @@ void EnvTask::init(int period) {
 
 void EnvTask::logout() {
     msgService.sendMsg(Msg("L"));
+    Serial.println("L");
     servoDoor.write(CLOSE_POS);
     ledValue->setIntensity(0);
     ledValue->switchOff();
