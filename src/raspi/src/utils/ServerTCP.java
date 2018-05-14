@@ -56,7 +56,7 @@ public class ServerTCP extends Thread {
 				e.printStackTrace();
 			}
 		} else if (request.equals("UPDATE")) {
-			response = new String(Float.toString(temperature) + "/" + Integer.toString(ledIntensity));
+			response = new String(Float.toString(temperature) + "/" + Integer.toString(ledIntensity) + "\n");
 		}
 		outToClient.writeBytes(response);
 	}

@@ -44,6 +44,7 @@ public class ClientTCP extends Thread {
 		String response = new String();
 		while (dataSize > 0) {
 			dataSize = recvStream.read(recvBuff, 0, 1024);
+			System.out.println(dataSize);
 			String buff_read = new String(recvBuff, 0, dataSize);
 			response = response + buff_read;
 			if (recvBuff[dataSize - 1] == '\n')
