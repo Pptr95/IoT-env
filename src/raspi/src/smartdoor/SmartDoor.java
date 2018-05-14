@@ -89,10 +89,12 @@ public class SmartDoor extends BasicEventLoopController {
 
 			case LOGGED:
 				if (ev instanceof WorkingDataReceived) {
+					System.out.println("STATE LOGGED");
 					this.server.setTemperature(((WorkingDataReceived) ev).getTemperature());
 					this.server.setLedIntensity(((WorkingDataReceived) ev).getLedIntensity());
 				} else if (ev instanceof SessionEnded) {
 					ledInside.switchOff();
+					System.out.println("SESSION ENDED");
 					final String msg = "Time: "
 							+ new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Calendar.getInstance().getTime())
 							+ " - Motion sensor didn't detect the user: " + this.currentUser;
