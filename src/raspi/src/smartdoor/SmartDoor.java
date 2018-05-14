@@ -63,6 +63,9 @@ public class SmartDoor extends BasicEventLoopController {
 								+ new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Calendar.getInstance().getTime())
 								+ " - Login failed for user: " + event.getUsername();
 						logger.writeLog(msg);
+						this.ledFailed.switchOn();
+						Thread.sleep(300);
+						this.ledFailed.switchOff();
 					}
 				}
 				break;
@@ -92,10 +95,11 @@ public class SmartDoor extends BasicEventLoopController {
 					this.server.setTemperature(((WorkingDataReceived) ev).getTemperature());
 					this.server.setLedIntensity(((WorkingDataReceived) ev).getLedIntensity());
 				} else if (ev instanceof SessionEnded) {
+					this.state = State.IDLE;
 					ledInside.switchOff();
 					final String msg = "Time: "
 							+ new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Calendar.getInstance().getTime())
-							+ " - Motion sensor didn't detect the user: " + this.currentUser;
+							+ " - Session ended for user: " + this.currentUser;
 					logger.writeLog(msg);
 					logger.closeLog();
 				}

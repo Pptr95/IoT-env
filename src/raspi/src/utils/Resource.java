@@ -18,10 +18,5 @@ public class Resource implements Serializable {
 
 	public String getPassword(final String username) {
 		return this.res.getString(username);
-	}
-	
-	public static void main(String[] args) {
-		Resource res = new Resource();
-		System.out.println(res.getPassword("luigi"));
-	}
+	}	
 }
