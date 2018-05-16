@@ -14,6 +14,7 @@ public class Logger {
 	private PrintWriter writer;
 
 	public Logger() throws FileNotFoundException, UnsupportedEncodingException {
+		final boolean  logsFolderCreation = new File(Paths.get(".").toAbsolutePath().normalize()+File.separator+"logs").mkdir();
 		File log = new File(Paths.get(".").toAbsolutePath().normalize().toString()+File.separator+ "logs" + File.separator
 				+ new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime()) + ".txt");
 		this.writer = new PrintWriter(new FileOutputStream(log, true));
