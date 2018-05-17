@@ -1,0 +1,9 @@
+Time: 17/05/2018 23:10:35 - Login failed for user: luigi
+Time: 17/05/2018 23:10:40 - Login failed for user: -
+Time: 17/05/2018 23:10:56 - Login granted for user: luigi
+Time: 17/05/2018 23:11:03 - Session ended for user: luigi
+
+Time: 17/05/2018 23:11:30 - Motion sensor didn't detect the user: mario
+Time: 17/05/2018 23:12:24 - Login granted for user: mario
+Time: 17/05/2018 23:12:57 - Session ended for user: mario
+
