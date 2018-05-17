@@ -62,7 +62,7 @@ public class SmartDoor extends BasicEventLoopController {
 						final String msg = "Time: "
 								+ new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Calendar.getInstance().getTime())
 								+ " - Login failed for user: " + event.getUsername();
-						logger.writeLog(msg);
+						this.logger.writeLog(msg);
 						this.ledFailed.switchOn();
 						Thread.sleep(300);
 						this.ledFailed.switchOff();
@@ -77,13 +77,13 @@ public class SmartDoor extends BasicEventLoopController {
 					final String msg = "Time: "
 							+ new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Calendar.getInstance().getTime())
 							+ " - Login granted for user: " + this.currentUser;
-					logger.writeLog(msg);
+					this.logger.writeLog(msg);
 				} else if (ev instanceof MotionNotDetected) {
 					this.state = State.IDLE;
 					final String msg = "Time: "
 							+ new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Calendar.getInstance().getTime())
 							+ " - Motion sensor didn't detect the user: " + this.currentUser;
-					logger.writeLog(msg);
+					this.logger.writeLog(msg);
 					this.ledFailed.switchOn();
 					Thread.sleep(300);
 					this.ledFailed.switchOff();
@@ -100,8 +100,8 @@ public class SmartDoor extends BasicEventLoopController {
 					final String msg = "Time: "
 							+ new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Calendar.getInstance().getTime())
 							+ " - Session ended for user: " + this.currentUser;
-					logger.writeLog(msg);
-					logger.closeLog();
+					this.logger.writeLog(msg);
+					this.logger.closeLog();
 				}
 				break;
 			}

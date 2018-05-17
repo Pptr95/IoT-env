@@ -59,7 +59,7 @@ void EnvTask::tick() {
         auth = false;
         state = IDLE;
       } else if(((millis() - startTime) < MAX_DELAY) && pir->isDetected()) {
-        Serial.println("Y"); // activate led on GW
+        Serial.println("Y");
         msgService.sendMsg(Msg("Y"));
         ledValue->switchOn();
         state = WORKING;

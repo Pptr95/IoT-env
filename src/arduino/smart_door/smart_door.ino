@@ -2,7 +2,7 @@
 #include "AuthTask.h"
 #include "EnvTask.h"
 #include "MsgService.h"
-#define OMEGA 100
+#define TICK_TIMER 100
 
 AuthTask *authTask = new AuthTask(7, 4, 8);   //trig, echo, ledOn
 EnvTask *envTask = new EnvTask(9, 6, 5, 0, 12);   //servo, ledValue, btnExit, temp, pir
@@ -17,10 +17,10 @@ void runTask() {
 }
 
 void setup() {
-  authTask->init(OMEGA);
-  envTask->init(OMEGA);
+  authTask->init(TICK_TIMER);
+  envTask->init(TICK_TIMER);
   msgService.init();
-  FlexiTimer2::set(OMEGA, runTask);
+  FlexiTimer2::set(TICK_TIMER, runTask);
   FlexiTimer2::start();
 }
 
